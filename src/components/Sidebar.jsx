@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertCircle, Navigation, Users, Activity, CheckCircle, Radar, Cloud, Wind, Thermometer, Filter, ChevronLeft, ChevronRight, PhoneCall, Sun, Moon, CloudRain, CloudSnow, CloudLightning, CloudFog, HelpCircle } from 'lucide-react';
+import { ChevronDown, Navigation, Search, Filter, ShieldAlert, Wifi, Activity, Info, PhoneCall, HeartPulse, FileText, Briefcase, Zap, X, MapPin, Users, CheckCircle, AlertCircle, Radar, Cloud, Wind, Thermometer, ChevronLeft, ChevronRight, Sun, Moon, CloudRain, CloudSnow, CloudLightning, CloudFog, HelpCircle } from 'lucide-react';
 
 const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, mapStyle, setMapStyle, onSOSClick, onSafeClick, onIncidentClick, droneScanActive, onToggleDrone, meshNetworkActive, onToggleMesh, heatmapActive, onToggleHeatmap, activeMission, onResolveMission, onOpenInstructions, onFindShelter, onOpenGuide }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -45,6 +45,12 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
         zIndex: 1000, borderRadius: '24px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px',
         transition: 'left 0.3s ease', overflowY: 'auto'
       }}>
+        <style>{`
+          ::-webkit-scrollbar { width: 8px; }
+          ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
+          ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); }
+          ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.6); }
+        `}</style>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '24px' }}>
           <Navigation size={32} color="#ef4444" style={{ transform: 'rotate(45deg)' }} />
           <div style={{ flex: 1 }}>
@@ -240,6 +246,12 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
           )}
         </div>
         
+        <div style={{ position: 'sticky', bottom: '-20px', left: 0, right: 0, textAlign: 'center', padding: '16px 0', background: 'linear-gradient(to top, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 0) 100%)', pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, borderBottomLeftRadius: '24px', borderBottomRightRadius: '24px' }}>
+          <div className="pulsing" style={{ background: 'var(--card-bg)', borderRadius: '50%', padding: '4px', marginBottom: '4px' }}>
+            <ChevronDown size={16} color="#94a3b8" />
+          </div>
+          SCROLL FOR MORE
+        </div>
       </div>
     </>
   );
