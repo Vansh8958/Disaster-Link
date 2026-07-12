@@ -9,7 +9,10 @@ import CommsTerminal from './components/CommsTerminal';
 import InstructionsModal from './components/InstructionsModal';
 import ResponderProfileModal from './components/ResponderProfileModal';
 import OfflineGuideModal from './components/OfflineGuideModal';
-import { MessageSquare, HelpCircle, PhoneCall } from 'lucide-react';
+import ContactsModal from './components/ContactsModal';
+import VolunteerModal from './components/VolunteerModal';
+import ReportHazardModal from './components/ReportHazardModal';
+import { MessageSquare, HelpCircle, PhoneCall, Crosshair, MapPin, Navigation } from 'lucide-react';
 
 const generateMockData = (centerLat, centerLng) => {
   return [
@@ -69,6 +72,12 @@ function App() {
   const [lang, setLang] = useState('EN');
   const [mapStyle, setMapStyle] = useState('dark');
   const [offlineGuide, setOfflineGuide] = useState(null);
+  const [isContactsOpen, setIsContactsOpen] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [isVolunteerOpen, setIsVolunteerOpen] = useState(false);
+  const [volunteerProfile, setVolunteerProfile] = useState(null);
+  const [isHazardOpen, setIsHazardOpen] = useState(false);
+  const [isRoutingActive, setIsRoutingActive] = useState(false);
   
   const [liveActivity, setLiveActivity] = useState([]);
   const [aiLogs, setAiLogs] = useState(["[AI] System Initialized.", "[AI] Triage Engine active."]);
@@ -195,6 +204,12 @@ function App() {
       }
     }, 4500);
 
+    refreshLocation();
+    
+    return () => clearInterval(activityInterval);
+  }, []);
+
+  const refreshLocation = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
@@ -204,7 +219,6 @@ function App() {
         const eqData = await fetchUSGSData(latitude, longitude);
         setIncidents([...eqData, ...generateMockData(latitude, longitude)]);
         
-        // Generate predictive risk zones around user
         setHeatmapZones([
           { lat: latitude + 0.02, lng: longitude + 0.03, radius: 4000, type: 'High Flood Risk' },
           { lat: latitude - 0.03, lng: longitude - 0.02, radius: 5500, type: 'Structural Collapse Warning' }
@@ -223,9 +237,7 @@ function App() {
         ]);
       }
     );
-    
-    return () => clearInterval(activityInterval);
-  }, []);
+  };
 
   const handleSOSSubmit = async (data) => {
     if (!userLocation) return;
@@ -276,13 +288,36 @@ function App() {
     }
   };
 
-  const handleClaimIncident = (id, responderType = 'volunteer') => {
-    const updatedIncidents = incidents.map(inc => 
-      inc.id === id ? { ...inc, status: 'In Progress', responder: responderType } : inc
-    );
-    setIncidents(updatedIncidents);
-    const claimed = updatedIncidents.find(inc => inc.id === id);
-    setActiveMission(claimed);
+  const handleClaimIncident = (id, responderType) => {
+    setIncidents(prev => prev.map(inc => {
+      if (inc.id === id) {
+        return { ...inc, status: 'Claimed', responder: responderType };
+      }
+      return inc;
+    }));
+    
+    const inc = incidents.find(i => i.id === id);
+    if (inc) {
+      const isOfficial = responderType === 'official';
+      setAiLogs(prev => [...prev.slice(-9), `[DISPATCH] ${isOfficial ? 'Official Team' : 'Volunteer'} routed to ${inc.type}.`]);
+      setLiveActivity(prev => [{ time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), msg: `${isOfficial ? 'Official Team' : 'Volunteer'} dispatched.` }, ...prev.slice(0, 9)]);
+      if (isOfficial) {
+        setActiveMission(inc);
+        setIsRightSidebarOpen(true);
+      }
+    }
+  };
+
+  const handleHazardSubmit = (hazardData) => {
+    setIncidents(prev => [hazardData, ...prev]);
+    setLiveActivity(prev => [{ time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), msg: `User reported ${hazardData.type}` }, ...prev.slice(0, 9)]);
+  };
+
+  const toggleRouting = () => {
+    setIsRoutingActive(!isRoutingActive);
+    if (!isRoutingActive) {
+      setLiveActivity(prev => [{ time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), msg: `Evacuation route generated.` }, ...prev.slice(0, 9)]);
+    }
   };
 
   const handleResolveMission = () => {
@@ -330,6 +365,7 @@ function App() {
         heatmapZones={heatmapZones}
         mapStyle={mapStyle}
         onClaimIncident={handleClaimIncident}
+        isRoutingActive={isRoutingActive}
       />
       
       <Sidebar 
@@ -355,14 +391,17 @@ function App() {
         onOpenInstructions={() => setIsInstructionsOpen(true)}
         onFindShelter={handleFindShelter}
         onOpenGuide={(type) => setOfflineGuide(type)}
+        onOpenContacts={() => setIsContactsOpen(true)}
       />
       
       <RightSidebar 
         inventory={inventory} 
         leaderboard={leaderboard} 
-        onResponderClick={(responder) => setSelectedResponder(responder)}
+        onResponderClick={setSelectedResponder}
         liveActivity={liveActivity}
         aiLogs={aiLogs}
+        onOpenVolunteer={() => setIsVolunteerOpen(true)}
+        volunteerProfile={volunteerProfile}
       />
       
       {droneScanActive && (
@@ -403,11 +442,66 @@ function App() {
         </a>
       </div>
 
+      <button
+        onClick={refreshLocation}
+        style={{
+          position: 'absolute', bottom: '90px', right: '350px', zIndex: 1000,
+          background: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(255, 255, 255, 0.2)',
+          color: 'white', borderRadius: '50%', width: '48px', height: '48px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.background = 'rgba(59, 130, 246, 0.6)'; }}
+        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = 'rgba(15, 23, 42, 0.8)'; }}
+        title="Refresh Location"
+      >
+        <Crosshair size={24} />
+      </button>
+
+      <button
+        onClick={() => setIsHazardOpen(true)}
+        style={{
+          position: 'absolute', bottom: '150px', right: '350px', zIndex: 1000,
+          background: 'rgba(245, 158, 11, 0.9)', border: '1px solid rgba(255, 255, 255, 0.2)',
+          color: 'white', borderRadius: '50%', width: '48px', height: '48px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(245, 158, 11, 0.5)',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
+        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+        title="Report Hazard"
+      >
+        <MapPin size={24} />
+      </button>
+
+      <button
+        onClick={toggleRouting}
+        style={{
+          position: 'absolute', bottom: '210px', right: '350px', zIndex: 1000,
+          background: isRoutingActive ? 'rgba(16, 185, 129, 0.9)' : 'rgba(15, 23, 42, 0.8)', 
+          border: `1px solid ${isRoutingActive ? '#10b981' : 'rgba(255, 255, 255, 0.2)'}`,
+          color: 'white', borderRadius: '50%', width: '48px', height: '48px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: isRoutingActive ? '0 4px 12px rgba(16, 185, 129, 0.5)' : '0 4px 12px rgba(0,0,0,0.5)',
+          transition: 'all 0.2s ease'
+        }}
+        onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
+        onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+        title="Find Safe Route"
+      >
+        <Navigation size={24} />
+      </button>
+
       <SOSModal isOpen={isSOSOpen} onClose={() => setIsSOSOpen(false)} onSubmit={handleSOSSubmit} />
       <SafeModal isOpen={isSafeOpen} onClose={() => setIsSafeOpen(false)} onSubmit={handleSafeSubmit} />
       <InstructionsModal isOpen={isInstructionsOpen} onClose={() => setIsInstructionsOpen(false)} />
       <ResponderProfileModal isOpen={!!selectedResponder} onClose={() => setSelectedResponder(null)} responder={selectedResponder} />
       <OfflineGuideModal isOpen={!!offlineGuide} onClose={() => setOfflineGuide(null)} guideType={offlineGuide} />
+      <ContactsModal isOpen={isContactsOpen} onClose={() => setIsContactsOpen(false)} contacts={contacts} setContacts={setContacts} />
+      <VolunteerModal isOpen={isVolunteerOpen} onClose={() => setIsVolunteerOpen(false)} volunteerProfile={volunteerProfile} setVolunteerProfile={setVolunteerProfile} />
+      <ReportHazardModal isOpen={isHazardOpen} onClose={() => setIsHazardOpen(false)} onSubmit={handleHazardSubmit} userLocation={userLocation || [51.505, -0.09]} />
     </div>
   );
 }

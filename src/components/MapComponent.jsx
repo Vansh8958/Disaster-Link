@@ -38,6 +38,12 @@ const progressIcon = new L.Icon({
   iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
 });
 
+const hazardIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+});
+
 const radarIcon = new L.divIcon({
   className: 'radar-sweep',
   iconSize: [400, 400],
@@ -70,13 +76,14 @@ const FlyToIncident = ({ incident }) => {
   return null;
 }
 
-const MapComponent = ({ incidents, userLocation, selectedIncident, activeMission, droneScanActive, meshNetworkActive, heatmapActive, heatmapZones, onClaimIncident, mapStyle }) => {
+const MapComponent = ({ incidents, userLocation, selectedIncident, activeMission, droneScanActive, meshNetworkActive, heatmapActive, heatmapZones, onClaimIncident, mapStyle, isRoutingActive }) => {
   const defaultCenter = [51.505, -0.09];
   
   const getIcon = (incident) => {
+    if (incident.type?.startsWith('Hazard')) return hazardIcon;
     if (incident.dataSource === 'gov') return govIcon;
     if (incident.dataSource === 'ngo' || incident.type === 'Safe') return safeIcon;
-    if (incident.status === 'In Progress') return progressIcon;
+    if (incident.status === 'In Progress' || incident.status === 'Claimed') return progressIcon;
     return sosIcon;
   };
   
@@ -140,6 +147,23 @@ const MapComponent = ({ incidents, userLocation, selectedIncident, activeMission
             dashArray="4, 4"
           />
         ))}
+
+        {isRoutingActive && userLocation && (
+          <Polyline
+            positions={[
+              userLocation,
+              [userLocation[0] + 0.01, userLocation[1] - 0.015],
+              [userLocation[0] + 0.025, userLocation[1] - 0.01],
+              [userLocation[0] + 0.03, userLocation[1] - 0.03],
+            ]}
+            color="#10b981"
+            weight={6}
+            className="pulsing"
+            dashArray="10, 10"
+          >
+            <Popup>Safe Evacuation Route</Popup>
+          </Polyline>
+        )}
 
         <MarkerClusterGroup 
           chunkedLoading 

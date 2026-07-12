@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Package, Trophy, Droplets, Flame, ShieldAlert, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Package, Trophy, Droplets, Flame, ShieldAlert, ChevronRight, ChevronLeft, UserPlus } from 'lucide-react';
 
-const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity = [], aiLogs = [] }) => {
+const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity = [], aiLogs = [], onOpenVolunteer, volunteerProfile }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const getIcon = (type) => {
@@ -23,6 +23,7 @@ const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity =
           borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', transition: 'right 0.3s ease', backdropFilter: 'blur(10px)'
         }}
+        title={isOpen ? "Close Logistics & Telemetry" : "Open Logistics & Telemetry"}
       >
         {isOpen ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
       </button>
@@ -69,6 +70,18 @@ const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity =
       </div>
 
       <hr style={{ border: 'none', borderTop: '1px solid var(--border-color)', margin: '4px 0' }} />
+      
+      <button 
+        onClick={onOpenVolunteer}
+        style={{ 
+          width: '100%', padding: '12px', background: volunteerProfile?.isActive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)',
+          border: `1px solid ${volunteerProfile?.isActive ? '#10b981' : 'rgba(16, 185, 129, 0.3)'}`, color: '#10b981',
+          borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+          cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem', flexShrink: 0
+        }}
+      >
+        <UserPlus size={18} /> {volunteerProfile?.isActive ? 'Volunteer Active' : 'Register as Volunteer'}
+      </button>
 
       {/* Leaderboard Section */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, overflowY: 'auto' }}>

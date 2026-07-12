@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, Navigation, Search, Filter, ShieldAlert, Wifi, Activity, Info, PhoneCall, HeartPulse, FileText, Briefcase, Zap, X, MapPin, Users, CheckCircle, AlertCircle, Radar, Cloud, Wind, Thermometer, ChevronLeft, ChevronRight, Sun, Moon, CloudRain, CloudSnow, CloudLightning, CloudFog, HelpCircle } from 'lucide-react';
 
-const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, mapStyle, setMapStyle, onSOSClick, onSafeClick, onIncidentClick, droneScanActive, onToggleDrone, meshNetworkActive, onToggleMesh, heatmapActive, onToggleHeatmap, activeMission, onResolveMission, onOpenInstructions, onFindShelter, onOpenGuide }) => {
+const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, mapStyle, setMapStyle, onSOSClick, onSafeClick, onIncidentClick, droneScanActive, onToggleDrone, meshNetworkActive, onToggleMesh, heatmapActive, onToggleHeatmap, activeMission, onResolveMission, onOpenInstructions, onFindShelter, onOpenGuide, onOpenContacts }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const getWeatherIcon = (code, isDay) => {
@@ -36,6 +36,7 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
           borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', transition: 'left 0.3s ease', backdropFilter: 'blur(10px)'
         }}
+        title={isOpen ? "Close Command Center" : "Open Command Center"}
       >
         {isOpen ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
       </button>
@@ -87,17 +88,24 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
         </div>
 
         {/* Compact Action Bar */}
-        <div style={{ display: 'flex', gap: '6px', marginBottom: '4px' }}>
-          <button style={{ flex: 1, background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#60a5fa', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={onFindShelter}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '4px' }}>
+          <button style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#60a5fa', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={onFindShelter}>
              <Navigation size={14} /> Shelter
           </button>
-          <button style={{ flex: 1, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#e2e8f0', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={() => onOpenGuide('firstaid')}>
+          <button style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#e2e8f0', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={() => onOpenGuide('firstaid')}>
              <Activity size={14} /> First Aid
           </button>
-          <button style={{ flex: 1, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#e2e8f0', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={() => onOpenGuide('gobag')}>
+          <button style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#e2e8f0', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={() => onOpenGuide('gobag')}>
              <AlertCircle size={14} /> Go-Bag
           </button>
         </div>
+        
+        <button 
+          onClick={onOpenContacts}
+          style={{ width: '100%', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#93c5fd', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600, marginBottom: '8px' }}
+        >
+          <PhoneCall size={14} color="#60a5fa" /> Emergency Contacts
+        </button>
 
         {weatherData && (
           <div style={{ background: 'var(--card-bg)', borderRadius: '12px', padding: '12px', display: 'flex', justifyContent: 'space-around', border: '1px solid var(--border-color)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)' }}>
