@@ -8,6 +8,7 @@ import DroneVideoFeed from './components/DroneVideoFeed';
 import CommsTerminal from './components/CommsTerminal';
 import InstructionsModal from './components/InstructionsModal';
 import ResponderProfileModal from './components/ResponderProfileModal';
+import OfflineGuideModal from './components/OfflineGuideModal';
 import { MessageSquare, HelpCircle } from 'lucide-react';
 
 const generateMockData = (centerLat, centerLng) => {
@@ -67,6 +68,7 @@ function App() {
   const [selectedResponder, setSelectedResponder] = useState(null);
   const [lang, setLang] = useState('EN');
   const [mapStyle, setMapStyle] = useState('dark');
+  const [offlineGuide, setOfflineGuide] = useState(null);
   
   const [liveActivity, setLiveActivity] = useState([]);
   const [aiLogs, setAiLogs] = useState(["[AI] System Initialized.", "[AI] Triage Engine active."]);
@@ -257,6 +259,23 @@ function App() {
     setIncidents([newIncident, ...incidents]);
   };
 
+  const handleFindShelter = () => {
+    const ngoCenters = incidents.filter(i => i.dataSource === 'ngo');
+    if (ngoCenters.length > 0) {
+      if (userLocation) {
+        let closest = ngoCenters[0];
+        let minDist = Infinity;
+        ngoCenters.forEach(ngo => {
+           const dist = Math.pow(ngo.lat - userLocation[0], 2) + Math.pow(ngo.lng - userLocation[1], 2);
+           if (dist < minDist) { minDist = dist; closest = ngo; }
+        });
+        setSelectedIncident(closest);
+      } else {
+        setSelectedIncident(ngoCenters[0]);
+      }
+    }
+  };
+
   const handleClaimIncident = (id, responderType = 'volunteer') => {
     const updatedIncidents = incidents.map(inc => 
       inc.id === id ? { ...inc, status: 'In Progress', responder: responderType } : inc
@@ -334,6 +353,8 @@ function App() {
         activeMission={activeMission}
         onResolveMission={handleResolveMission}
         onOpenInstructions={() => setIsInstructionsOpen(true)}
+        onFindShelter={handleFindShelter}
+        onOpenGuide={(type) => setOfflineGuide(type)}
       />
       
       <RightSidebar 
@@ -377,6 +398,7 @@ function App() {
       <SafeModal isOpen={isSafeOpen} onClose={() => setIsSafeOpen(false)} onSubmit={handleSafeSubmit} />
       <InstructionsModal isOpen={isInstructionsOpen} onClose={() => setIsInstructionsOpen(false)} />
       <ResponderProfileModal isOpen={!!selectedResponder} onClose={() => setSelectedResponder(null)} responder={selectedResponder} />
+      <OfflineGuideModal isOpen={!!offlineGuide} onClose={() => setOfflineGuide(null)} guideType={offlineGuide} />
     </div>
   );
 }
