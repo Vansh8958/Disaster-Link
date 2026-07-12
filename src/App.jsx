@@ -302,8 +302,8 @@ function App() {
       const isOfficial = responderType === 'official';
       setAiLogs(prev => [...prev.slice(-9), `[DISPATCH] ${isOfficial ? 'Official Team' : 'Volunteer'} routed to ${inc.type}.`]);
       setLiveActivity(prev => [{ time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), msg: `${isOfficial ? 'Official Team' : 'Volunteer'} dispatched.` }, ...prev.slice(0, 9)]);
+      setActiveMission(inc);
       if (isOfficial) {
-        setActiveMission(inc);
         setIsRightSidebarOpen(true);
       }
     }
