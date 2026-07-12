@@ -71,29 +71,26 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
           </div>
         </div>
 
-        <button className="sos-button pulsing" onClick={onSOSClick} style={{ width: '100%', padding: '16px', borderRadius: '16px', fontSize: '1.2rem', marginBottom: '4px', background: '#ef4444', border: 'none', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)' }}>
-          <PhoneCall size={24} /> {lang === 'ES' ? 'SOS — pedir ayuda' : lang === 'HI' ? 'एसओएस — मदद के लिए बुलाएं' : 'SOS — call for help'}
-        </button>
-
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-          <button style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', color: '#f8fafc', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', transition: 'all 0.2s' }} onClick={onFindShelter} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}>
-             <Navigation size={24} color="#3b82f6" /> {lang === 'ES' ? 'Refugio cercano' : lang === 'HI' ? 'निकटतम आश्रय' : 'Nearest shelter'}
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button className="sos-button pulsing" onClick={onSOSClick} style={{ flex: 2, padding: '12px' }}>
+            <AlertCircle size={20} /> {lang === 'ES' ? 'ENVIAR SOS' : lang === 'HI' ? 'एसओएस भेजें' : 'SEND SOS'}
           </button>
-          <button style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', padding: '16px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', color: '#f8fafc', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', transition: 'all 0.2s' }} onClick={onSafeClick} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}>
-             <Users size={24} color="#10b981" /> {lang === 'ES' ? 'Marcar familia a salvo' : lang === 'HI' ? 'परिवार को सुरक्षित करें' : 'Mark family safe'}
+          <button className="safe-button" onClick={onSafeClick} title={lang === 'ES' ? 'Marcar área a salvo' : lang === 'HI' ? 'क्षेत्र सुरक्षित करें' : 'Mark Area Safe'} style={{ flex: 1, padding: '12px' }}>
+            <CheckCircle size={20} />
           </button>
         </div>
 
-        <div style={{ marginBottom: '8px' }}>
-           <h3 style={{ fontSize: '0.85rem', marginBottom: '10px', color: '#94a3b8', fontWeight: 600 }}>Offline guides</h3>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-             <button style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', padding: '14px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', color: '#f8fafc', cursor: 'pointer', alignItems: 'center', fontWeight: 500, transition: 'all 0.2s' }} onClick={() => onOpenGuide('firstaid')} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><Activity size={18} color="#94a3b8" /> First aid basics</div> <ChevronRight size={18} color="#94a3b8" />
-             </button>
-             <button style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', padding: '14px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', color: '#f8fafc', cursor: 'pointer', alignItems: 'center', fontWeight: 500, transition: 'all 0.2s' }} onClick={() => onOpenGuide('gobag')} onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'} onMouseOut={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}><AlertCircle size={18} color="#94a3b8" /> Go-bag checklist</div> <ChevronRight size={18} color="#94a3b8" />
-             </button>
-           </div>
+        {/* Compact Action Bar */}
+        <div style={{ display: 'flex', gap: '6px', marginBottom: '4px' }}>
+          <button style={{ flex: 1, background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#60a5fa', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={onFindShelter}>
+             <Navigation size={14} /> Shelter
+          </button>
+          <button style={{ flex: 1, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#e2e8f0', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={() => onOpenGuide('firstaid')}>
+             <Activity size={14} /> First Aid
+          </button>
+          <button style={{ flex: 1, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '6px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#e2e8f0', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }} onClick={() => onOpenGuide('gobag')}>
+             <AlertCircle size={14} /> Go-Bag
+          </button>
         </div>
 
         {weatherData && (
