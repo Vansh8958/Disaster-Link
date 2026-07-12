@@ -9,7 +9,7 @@ import CommsTerminal from './components/CommsTerminal';
 import InstructionsModal from './components/InstructionsModal';
 import ResponderProfileModal from './components/ResponderProfileModal';
 import OfflineGuideModal from './components/OfflineGuideModal';
-import { MessageSquare, HelpCircle } from 'lucide-react';
+import { MessageSquare, HelpCircle, PhoneCall } from 'lucide-react';
 
 const generateMockData = (centerLat, centerLng) => {
   return [
@@ -393,6 +393,15 @@ function App() {
           <MessageSquare size={20} /> {lang === 'ES' ? 'ABRIR COMMS' : lang === 'HI' ? 'संचार खोलें' : 'OPEN COMMS'}
         </button>
       )}
+
+      <div style={{ position: 'absolute', bottom: '24px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0, 0, 0, 0.7)', padding: '12px 20px', borderRadius: '30px', border: '1px solid rgba(239, 68, 68, 0.4)', gap: '16px', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}>
+        <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fca5a5' }}>
+          EMERGENCY HELPLINE
+        </div>
+        <a href="tel:911" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ef4444', color: 'white', textDecoration: 'none', padding: '8px 16px', borderRadius: '24px', fontSize: '0.9rem', fontWeight: 'bold', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)' }}>
+          <PhoneCall size={16} /> CALL 911
+        </a>
+      </div>
 
       <SOSModal isOpen={isSOSOpen} onClose={() => setIsSOSOpen(false)} onSubmit={handleSOSSubmit} />
       <SafeModal isOpen={isSafeOpen} onClose={() => setIsSafeOpen(false)} onSubmit={handleSafeSubmit} />

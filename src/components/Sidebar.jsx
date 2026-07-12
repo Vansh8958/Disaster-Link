@@ -43,7 +43,7 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
       <div className="glass-panel" style={{
         position: 'absolute', left: isOpen ? '20px' : '-420px', top: '20px', bottom: '20px', width: '380px',
         zIndex: 1000, borderRadius: '24px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px',
-        transition: 'left 0.3s ease'
+        transition: 'left 0.3s ease', overflowY: 'auto'
       }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '24px' }}>
           <Navigation size={32} color="#ef4444" style={{ transform: 'rotate(45deg)' }} />
@@ -180,7 +180,7 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
           </div>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px', minHeight: 0 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', paddingRight: '4px' }}>
           
           {incidents.length === 0 ? (
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No active incidents.</p>
@@ -240,20 +240,6 @@ const Sidebar = ({ incidents, weatherData, filters, setFilters, lang, setLang, m
           )}
         </div>
         
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', borderTop: '1px solid var(--border-color)', paddingTop: '12px' }}>
-          <span style={{display: 'flex', alignItems:'center', gap:'4px'}}><Users size={14} /> 1,402 Responders</span>
-          <span>{incidents.length} Active Signals</span>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(239, 68, 68, 0.1)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(239, 68, 68, 0.3)' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#fca5a5' }}>
-            EMERGENCY HELPLINE<br/>
-            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>National Dispatch Center</span>
-          </div>
-          <a href="tel:911" style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--primary)', color: 'white', textDecoration: 'none', padding: '6px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 600 }}>
-            <PhoneCall size={14} /> CALL 911
-          </a>
-        </div>
       </div>
     </>
   );
