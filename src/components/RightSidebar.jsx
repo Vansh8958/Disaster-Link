@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Package, Trophy, Droplets, Flame, ShieldAlert, ChevronRight, ChevronLeft, UserPlus } from 'lucide-react';
+import { Package, Trophy, Droplets, Flame, ShieldAlert, ChevronRight, ChevronLeft, UserPlus, ChevronDown } from 'lucide-react';
 
 const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity = [], aiLogs = [], onOpenVolunteer, volunteerProfile }) => {
   const [isOpen, setIsOpen] = useState(false);
