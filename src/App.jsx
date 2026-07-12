@@ -12,6 +12,7 @@ import OfflineGuideModal from './components/OfflineGuideModal';
 import ContactsModal from './components/ContactsModal';
 import VolunteerModal from './components/VolunteerModal';
 import ReportHazardModal from './components/ReportHazardModal';
+import DraggableFab from './components/DraggableFab';
 import { MessageSquare, HelpCircle, PhoneCall, Crosshair, MapPin, Navigation } from 'lucide-react';
 
 const generateMockData = (centerLat, centerLng) => {
@@ -442,57 +443,54 @@ function App() {
         </a>
       </div>
 
-      <button
+      <DraggableFab
         onClick={refreshLocation}
+        initialX={window.innerWidth - 420}
+        initialY={window.innerHeight - 150}
         style={{
-          position: 'absolute', bottom: '90px', right: '350px', zIndex: 1000,
           background: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(255, 255, 255, 0.2)',
-          color: 'white', borderRadius: '50%', width: '48px', height: '48px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
-          transition: 'all 0.2s ease'
+          color: 'white', borderRadius: '50%', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
+          transition: 'background 0.2s, transform 0.2s'
         }}
         onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.background = 'rgba(59, 130, 246, 0.6)'; }}
         onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = 'rgba(15, 23, 42, 0.8)'; }}
         title="Refresh Location"
       >
         <Crosshair size={24} />
-      </button>
+      </DraggableFab>
 
-      <button
+      <DraggableFab
         onClick={() => setIsHazardOpen(true)}
+        initialX={window.innerWidth - 420}
+        initialY={window.innerHeight - 210}
         style={{
-          position: 'absolute', bottom: '150px', right: '350px', zIndex: 1000,
           background: 'rgba(245, 158, 11, 0.9)', border: '1px solid rgba(255, 255, 255, 0.2)',
-          color: 'white', borderRadius: '50%', width: '48px', height: '48px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(245, 158, 11, 0.5)',
-          transition: 'all 0.2s ease'
+          color: 'white', borderRadius: '50%', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(245, 158, 11, 0.5)',
+          transition: 'transform 0.2s'
         }}
         onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
         onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
         title="Report Hazard"
       >
         <MapPin size={24} />
-      </button>
+      </DraggableFab>
 
-      <button
+      <DraggableFab
         onClick={toggleRouting}
+        initialX={window.innerWidth - 420}
+        initialY={window.innerHeight - 270}
         style={{
-          position: 'absolute', bottom: '210px', right: '350px', zIndex: 1000,
           background: isRoutingActive ? 'rgba(16, 185, 129, 0.9)' : 'rgba(15, 23, 42, 0.8)', 
           border: `1px solid ${isRoutingActive ? '#10b981' : 'rgba(255, 255, 255, 0.2)'}`,
-          color: 'white', borderRadius: '50%', width: '48px', height: '48px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: isRoutingActive ? '0 4px 12px rgba(16, 185, 129, 0.5)' : '0 4px 12px rgba(0,0,0,0.5)',
-          transition: 'all 0.2s ease'
+          color: 'white', borderRadius: '50%', backdropFilter: 'blur(10px)', boxShadow: isRoutingActive ? '0 4px 12px rgba(16, 185, 129, 0.5)' : '0 4px 12px rgba(0,0,0,0.5)',
+          transition: 'transform 0.2s'
         }}
         onMouseOver={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
         onMouseOut={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
         title="Find Safe Route"
       >
         <Navigation size={24} />
-      </button>
+      </DraggableFab>
 
       <SOSModal isOpen={isSOSOpen} onClose={() => setIsSOSOpen(false)} onSubmit={handleSOSSubmit} />
       <SafeModal isOpen={isSafeOpen} onClose={() => setIsSafeOpen(false)} onSubmit={handleSafeSubmit} />

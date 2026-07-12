@@ -31,8 +31,14 @@ const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity =
       <div className="glass-panel" style={{
         position: 'absolute', right: isOpen ? '20px' : '-400px', top: '20px', bottom: '20px', width: '320px',
         zIndex: 1000, borderRadius: '24px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px',
-        transition: 'right 0.3s ease'
+        transition: 'right 0.3s ease', overflowY: 'auto'
       }}>
+        <style>{`
+          ::-webkit-scrollbar { width: 8px; }
+          ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
+          ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 4px; border: 1px solid rgba(0,0,0,0.2); }
+          ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.6); }
+        `}</style>
       
       {/* Inventory Section */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -84,7 +90,7 @@ const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity =
       </button>
 
       {/* Leaderboard Section */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, overflowY: 'auto' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <h2 style={{ fontSize: '1.1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', color: '#f8fafc' }}>
           <Trophy size={20} color="#f59e0b" /> Rescue Leaderboard
         </h2>
@@ -139,6 +145,13 @@ const RightSidebar = ({ inventory, leaderboard, onResponderClick, liveActivity =
             <div key={i} style={{ opacity: i === aiLogs.length - 1 ? 1 : 0.7 }}>{log}</div>
           ))}
         </div>
+      </div>
+      
+      <div style={{ position: 'sticky', bottom: '-24px', left: 0, right: 0, textAlign: 'center', padding: '16px 0', background: 'linear-gradient(to top, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 0) 100%)', pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--text-muted)', fontSize: '0.75rem', fontWeight: 600, borderBottomLeftRadius: '24px', borderBottomRightRadius: '24px' }}>
+        <div className="pulsing" style={{ background: 'var(--card-bg)', borderRadius: '50%', padding: '4px', marginBottom: '4px' }}>
+          <ChevronDown size={16} color="#94a3b8" />
+        </div>
+        SCROLL FOR MORE
       </div>
     </div>
     </>
