@@ -58,6 +58,14 @@ const createClusterCustomIcon = function (cluster) {
   });
 };
 
+const userIcon = new L.divIcon({
+  className: 'user-location-marker',
+  html: `<div style="width: 20px; height: 20px; background: #3b82f6; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); position: relative; left: -10px; top: -10px;">
+           <div class="pulsing" style="width: 100%; height: 100%; background: #3b82f6; border-radius: 50%; opacity: 0.5;"></div>
+         </div>`,
+  iconSize: [0, 0]
+});
+
 const ChangeView = ({ center }) => {
   const map = useMap();
   useEffect(() => {
@@ -76,7 +84,7 @@ const FlyToIncident = ({ incident }) => {
   return null;
 }
 
-const MapComponent = ({ incidents, userLocation, selectedIncident, activeMission, droneScanActive, meshNetworkActive, heatmapActive, heatmapZones, onClaimIncident, mapStyle, isRoutingActive }) => {
+const MapComponent = ({ incidents, userLocation, setUserLocation, selectedIncident, activeMission, droneScanActive, meshNetworkActive, heatmapActive, heatmapZones, onClaimIncident, mapStyle, isRoutingActive }) => {
   const defaultCenter = [51.505, -0.09];
   
   const getIcon = (incident) => {
@@ -99,6 +107,25 @@ const MapComponent = ({ incidents, userLocation, selectedIncident, activeMission
 
         {userLocation && <ChangeView center={userLocation} />}
         <FlyToIncident incident={selectedIncident} />
+
+        {userLocation && (
+          <Marker 
+            position={userLocation} 
+            icon={userIcon} 
+            draggable={true}
+            eventHandlers={{
+              dragend: (e) => {
+                const marker = e.target;
+                const position = marker.getLatLng();
+                if (setUserLocation) {
+                  setUserLocation([position.lat, position.lng]);
+                }
+              }
+            }}
+          >
+            <Popup><strong>You are here</strong><br/>Drag to correct your location</Popup>
+          </Marker>
+        )}
 
         {(() => {
           if (!activeMission || !userLocation) return null;

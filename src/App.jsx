@@ -74,7 +74,10 @@ function App() {
   const [mapStyle, setMapStyle] = useState('dark');
   const [offlineGuide, setOfflineGuide] = useState(null);
   const [isContactsOpen, setIsContactsOpen] = useState(false);
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => {
+    const saved = localStorage.getItem('disaster_contacts');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isVolunteerOpen, setIsVolunteerOpen] = useState(false);
   const [volunteerProfile, setVolunteerProfile] = useState(null);
   const [isHazardOpen, setIsHazardOpen] = useState(false);
@@ -209,6 +212,10 @@ function App() {
     
     return () => clearInterval(activityInterval);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('disaster_contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const refreshLocation = () => {
     navigator.geolocation.getCurrentPosition(
@@ -358,6 +365,7 @@ function App() {
       <MapComponent 
         incidents={filteredIncidents} 
         userLocation={userLocation} 
+        setUserLocation={setUserLocation}
         selectedIncident={selectedIncident} 
         activeMission={activeMission}
         droneScanActive={droneScanActive}
