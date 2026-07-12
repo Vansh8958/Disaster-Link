@@ -208,7 +208,25 @@ function App() {
       }
     }, 4500);
 
-    refreshLocation();
+    const savedLoc = localStorage.getItem('disaster_manual_location');
+    if (savedLoc) {
+      try {
+        const loc = JSON.parse(savedLoc);
+        setUserLocation(loc);
+        fetchWeather(loc[0], loc[1]);
+        fetchUSGSData(loc[0], loc[1]).then(eqData => {
+          setIncidents([...eqData, ...generateMockData(loc[0], loc[1])]);
+        });
+        setHeatmapZones([
+          { lat: loc[0] + 0.02, lng: loc[1] + 0.03, radius: 4000, type: 'High Flood Risk' },
+          { lat: loc[0] - 0.03, lng: loc[1] - 0.02, radius: 5500, type: 'Structural Collapse Warning' }
+        ]);
+      } catch (e) {
+        refreshLocation();
+      }
+    } else {
+      refreshLocation();
+    }
     
     return () => clearInterval(activityInterval);
   }, []);
@@ -217,7 +235,13 @@ function App() {
     localStorage.setItem('disaster_contacts', JSON.stringify(contacts));
   }, [contacts]);
 
+  const handleSetUserLocation = (loc) => {
+    setUserLocation(loc);
+    localStorage.setItem('disaster_manual_location', JSON.stringify(loc));
+  };
+
   const refreshLocation = () => {
+    localStorage.removeItem('disaster_manual_location');
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
@@ -365,7 +389,7 @@ function App() {
       <MapComponent 
         incidents={filteredIncidents} 
         userLocation={userLocation} 
-        setUserLocation={setUserLocation}
+        setUserLocation={handleSetUserLocation}
         selectedIncident={selectedIncident} 
         activeMission={activeMission}
         droneScanActive={droneScanActive}
