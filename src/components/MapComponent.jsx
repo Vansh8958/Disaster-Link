@@ -157,7 +157,7 @@ const MapComponent = ({ incidents, userLocation, selectedIncident, activeMission
                   <strong style={{ fontSize: '1.1rem' }}>{incident.type}</strong>
                   <div style={{ margin: '8px 0', fontSize: '0.9rem', color: '#555' }}>📍 {incident.address}</div>
                   <p style={{ margin: '0 0 12px 0', fontSize: '0.8rem' }}>{incident.description}</p>
-                  {incident.status === 'Active' ? (
+                  {incident.type === 'NGO Center' || incident.type === 'Safe' ? null : incident.status === 'Active' ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       <button 
                         onClick={() => onClaimIncident && onClaimIncident(incident.id, 'volunteer')}
