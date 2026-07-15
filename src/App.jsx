@@ -71,7 +71,7 @@ function App() {
   const [filters, setFilters] = useState({ gov: true, ngo: true, verified: true, crowd: true });
   const [selectedResponder, setSelectedResponder] = useState(null);
   const [lang, setLang] = useState('EN');
-  const [mapStyle, setMapStyle] = useState('dark');
+  const [mapStyle, setMapStyle] = useState('light');
   const [offlineGuide, setOfflineGuide] = useState(null);
   const [isContactsOpen, setIsContactsOpen] = useState(false);
   const [contacts, setContacts] = useState(() => {
